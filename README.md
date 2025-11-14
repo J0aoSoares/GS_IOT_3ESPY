@@ -1,214 +1,114 @@
-# WorkCare IoT – Estação de Bem-Estar no Trabalho
+WorkCare IoT – Estação de Bem-Estar no Trabalho
+================================================
 
 ### João Victor Soares Rodrigues
 ### RM551410
 
-## 1. Introdução
+1. Introdução
+-------------
 
-O avanço da automação, da Internet das Coisas (IoT) e do trabalho remoto está transformando profundamente a forma como as pessoas exercem suas atividades profissionais. Nesse contexto, aspectos como **saúde**, **bem-estar** e **qualidade do ambiente de trabalho** tornam-se cada vez mais relevantes para garantir produtividade e sustentabilidade no “Futuro do Trabalho”.
+O avanço da automação, da Internet das Coisas (IoT) e dos modelos de trabalho híbridos e remotos está transformando profundamente a forma como as pessoas exercem suas atividades profissionais. Se, por um lado, essas mudanças ampliam a flexibilidade e a produtividade, por outro, trazem novos desafios relacionados à saúde, ao bem-estar e à qualidade do ambiente de trabalho.
 
-Este projeto apresenta uma **estação de bem-estar** baseada em ESP32, capaz de monitorar variáveis ambientais (temperatura e umidade) e o tempo de trabalho contínuo, emitindo alertas visuais quando condições de desconforto ou possível fadiga são identificadas. Além disso, os dados são enviados via **MQTT**, caracterizando uma aplicação prática de IoT alinhada ao tema proposto pela disciplina.
+Em cenários de home office ou escritórios com forte presença de tecnologia, é comum que profissionais permaneçam longos períodos em frente a telas, em ambientes nem sempre adequados em termos de conforto térmico, ergonomia e pausas regulares. Muitas vezes, a gestão do próprio bem-estar fica restrita à percepção subjetiva do trabalhador, que tende a negligenciar sinais de fadiga, estresse e desconforto.
 
-## 2. Objetivos
+Nesse contexto, o projeto **WorkCare IoT – Estação de Bem-Estar no Trabalho** propõe uma solução tecnológica simples, mas representativa, que utiliza conceitos de IoT para monitorar condições ambientais e o tempo de trabalho contínuo, auxiliando na promoção de hábitos mais saudáveis e na melhoria da qualidade de vida no ambiente profissional.
 
-### 2.1 Objetivo Geral
+2. Problema de Pesquisa
+-----------------------
 
-Desenvolver uma solução simples e de baixo custo, utilizando ESP32, sensor DHT22 e um LED, que monitore o ambiente de trabalho e o tempo de uso, fornecendo alertas e enviando dados via MQTT, como exemplo de aplicação do conceito de IoT no contexto do Futuro do Trabalho.
+O problema central abordado pelo projeto pode ser resumido da seguinte forma:
 
-### 2.2 Objetivos Específicos
+> Como apoiar, de forma simples e automatizada, a saúde e o bem-estar de trabalhadores em ambientes digitais, por meio do monitoramento contínuo de condições ambientais e de tempo de trabalho, utilizando tecnologias acessíveis de Internet das Coisas?
 
-- Monitorar temperatura e umidade do ambiente em tempo real por meio do sensor DHT22.
-- Controlar um LED de alerta com base em condições pré-definidas de conforto térmico e tempo de trabalho contínuo.
-- Enviar os dados coletados (temperatura, umidade, tempo de trabalho e estado de alerta) para um broker MQTT.
-- Simular o funcionamento do sistema no ambiente Wokwi, demonstrando a integração entre hardware, software e comunicação IoT.
-- Discutir o impacto da solução na promoção de saúde e bem-estar no ambiente de trabalho.
+A questão envolve dois aspectos principais:
 
-## 3. Fundamentação Teórica (Resumo)
+1. **Falta de monitoramento objetivo do ambiente de trabalho**  
+   Em muitos contextos, especialmente no trabalho remoto, não há um sistema estruturado para acompanhar variáveis como temperatura e umidade. Ambientes muito quentes, frios ou abafados podem impactar diretamente a concentração, o conforto físico e o desempenho do profissional.
 
-### 3.1 Internet das Coisas (IoT)
+2. **Ausência de mecanismos de alerta para pausas**  
+   Mesmo existindo recomendações sobre pausas periódicas, a decisão de interromper a atividade normalmente depende apenas da disciplina individual. Em situações de alta demanda, é comum que o trabalhador ultrapasse limites saudáveis de tempo contínuo em frente ao computador, aumentando o risco de fadiga e problemas de saúde.
 
-A Internet das Coisas (IoT) consiste na conexão de dispositivos físicos à internet, permitindo a coleta, o envio e o processamento de dados de forma automatizada. No contexto do trabalho, a IoT possibilita a criação de **ambientes inteligentes**, capazes de monitorar condições, reagir a eventos e apoiar decisões relacionadas à produtividade e bem-estar.
+Dessa forma, há uma lacuna entre o conhecimento sobre boas práticas de bem-estar no trabalho e a existência de ferramentas tecnológicas que ajudem, na prática, a implementar e reforçar esses cuidados no dia a dia.
 
-### 3.2 ESP32
+3. Proposta do Projeto
+----------------------
 
-O **ESP32** é um microcontrolador com recursos de Wi-Fi e Bluetooth integrados, amplamente utilizado em projetos de IoT por seu baixo custo, flexibilidade e facilidade de programação por meio da IDE Arduino ou plataformas similares. Neste projeto, o ESP32 é responsável por:
+O projeto WorkCare IoT propõe o desenvolvimento de uma **estação de bem-estar** baseada em um microcontrolador ESP32, capaz de integrar três elementos principais:
 
-- Ler os dados do sensor DHT22;
-- Processar a lógica de decisão (alertas);
-- Acionar o LED;
-- Conectar-se ao Wi-Fi;
-- Enviar dados ao broker MQTT.
+1. **Monitoramento ambiental**  
+   Utilização de um sensor de temperatura e umidade para acompanhar, em tempo real, as condições do ambiente em que o trabalhador está inserido. Esses dados permitem identificar situações de desconforto térmico, como calor excessivo, que podem afetar a saúde e a produtividade.
 
-### 3.3 Sensor DHT22
+2. **Monitoramento do tempo de trabalho contínuo**  
+   O sistema registra o tempo decorrido desde o início de um período de trabalho, simulando a rotina de uso do computador ou de permanência em atividade sem pausas. A partir de um limite pré-definido (por exemplo, 50 minutos em um cenário real), o sistema passa a considerar que há risco aumentado de fadiga e necessidade de descanso.
 
-O **DHT22** é um sensor digital de temperatura e umidade. Ele fornece leituras razoavelmente precisas para aplicações didáticas, sendo amplamente utilizado em projetos de monitoramento ambiental. No Wokwi, o DHT22 é conectado ao ESP32 por meio do pino de dados (SDA).
+3. **Geração de alertas e envio de dados via IoT**  
+   Com base na combinação entre condições ambientais e tempo de trabalho, o sistema classifica o estado do trabalhador em uma situação “normal” ou de “alerta”. Essa classificação é comunicada por meio de um atuador simples (como um LED), que serve como lembrete visual de que é necessário fazer uma pausa ou ajustar o ambiente. Paralelamente, os dados são enviados a um broker MQTT, permitindo que aplicações externas (dashboards, sistemas de análise, etc.) acompanhem o histórico de condições e alertas.
 
-### 3.4 Protocolo MQTT
+Em síntese, o projeto não se limita a medir variáveis isoladas, mas procura **integrar monitoramento, tomada de decisão automática e comunicação em rede**, caracterizando uma aplicação coerente com os princípios da Internet das Coisas no contexto do Futuro do Trabalho.
 
-O **MQTT (Message Queuing Telemetry Transport)** é um protocolo leve de comunicação voltado para IoT, baseado no modelo **publicador/assinante (pub/sub)**. No projeto, o ESP32 atua como **publicador**, enviando mensagens em formato JSON para um tópico em um broker MQTT público. Essas mensagens podem ser consumidas por dashboards, aplicações web ou outros dispositivos.
+4. Objetivos
+------------
 
-## 4. Materiais e Métodos
+### 4.1 Objetivo Geral
 
-### 4.1 Componentes Utilizados (Simulação Wokwi)
+Desenvolver uma solução baseada em ESP32 e IoT que contribua para a promoção de saúde e bem-estar no ambiente de trabalho, por meio do monitoramento de condições ambientais e de tempo de trabalho contínuo, com geração de alertas e disponibilização dos dados em um canal de comunicação MQTT.
 
-- 1x ESP32 DevKit (ESP32 Dev Module)
-- 1x Sensor DHT22 (temperatura e umidade)
-- 1x LED (qualquer cor)
-- 1x Resistor de 220 Ω (para o LED)
-- Fios de conexão virtuais (no ambiente Wokwi)
+### 4.2 Objetivos Específicos
 
-### 4.2 Ferramentas de Software
+- Identificar fatores relacionados ao conforto e ao bem-estar no ambiente de trabalho que podem ser monitorados com sensores simples (como temperatura e umidade).
+- Modelar uma lógica de decisão que considere, de forma combinada, as condições ambientais e o tempo de trabalho contínuo, identificando estados de normalidade e de alerta.
+- Implementar uma solução embarcada capaz de:
+  - ler dados de sensores ambientais;
+  - acompanhar o tempo de trabalho;
+  - acionar um mecanismo de alerta para o usuário;
+  - enviar os dados coletados para um broker MQTT.
+- Discutir de que forma soluções semelhantes podem ser ampliadas e integradas a ambientes corporativos, plataformas de monitoramento de bem-estar e políticas de saúde ocupacional.
 
-- Simulador **Wokwi** (projeto ESP32)
-- IDE Arduino (ou editor de código do próprio Wokwi)
-- Broker MQTT público (ex.: `broker.hivemq.com`)
-- Cliente MQTT opcional (ex.: MQTT Explorer) para visualizar mensagens
+5. Justificativa
+----------------
 
-### 4.3 Ligações no Wokwi
+O projeto se justifica tanto do ponto de vista tecnológico quanto do ponto de vista social.
 
-**Sensor DHT22:**
+Do ponto de vista tecnológico, a proposta evidencia o potencial de plataformas embarcadas (como o ESP32) e de protocolos de IoT (como o MQTT) para a construção de soluções voltadas ao cotidiano do trabalhador. Ao utilizar componentes acessíveis e uma arquitetura relativamente simples, o projeto se posiciona como uma **porta de entrada pedagógica** para temas como automação, computação em nuvem e análise de dados.
 
-- VCC → 3V3 do ESP32
-- SDA (dados) → GPIO 15 do ESP32
-- NC → não conectado
-- GND → GND do ESP32
+Do ponto de vista social, a iniciativa dialoga diretamente com a necessidade de **promover ambientes de trabalho mais saudáveis**, em um contexto em que as fronteiras entre vida pessoal e profissional se tornam menos nítidas, especialmente no home office. Ferramentas que auxiliem na organização do tempo, no respeito a pausas e na manutenção de condições ambientais adequadas tornam-se importantes aliadas na prevenção de problemas físicos e emocionais.
 
-**LED de Alerta:**
+Além disso, o projeto está alinhado ao tema interdisciplinar “O Futuro do Trabalho”, ao demonstrar que a tecnologia pode ser utilizada não apenas para aumentar a produtividade, mas também para **cuidar do bem-estar humano**, promovendo um equilíbrio mais saudável entre desempenho e qualidade de vida.
 
-- Anodo (perna maior) → resistor de 220 Ω → GPIO 2 do ESP32
-- Catodo (perna menor) → GND do ESP32
+6. Metodologia em Alto Nível
+----------------------------
 
-### 4.4 Estrutura do Repositório
+A metodologia adotada pode ser descrita de forma resumida em três etapas principais:
 
-Sugestão de estrutura de pastas para o repositório GitHub:
+1. **Análise do problema e definição de requisitos**  
+   Nesta etapa, foram identificados os principais fatores de bem-estar no ambiente de trabalho que poderiam ser abordados com uma solução de baixo custo. Definiram-se, então, os requisitos básicos do sistema: monitorar temperatura, umidade e tempo de trabalho, emitir alertas locais e enviar dados a um canal de comunicação IoT.
 
-```text
-WorkCare-IoT/
-├─ src/
-│  └─ workcare_iot.ino      # Código-fonte principal do ESP32
-└─ README.md                # Documentação do projeto (este arquivo)
-```
+2. **Modelagem conceitual da solução**  
+   A partir dos requisitos, foi elaborado um modelo conceitual no qual um dispositivo embarcado realiza as leituras de sensores, processa regras de decisão (limites de temperatura e de tempo de trabalho) e aciona alertas. Em paralelo, o dispositivo atua como nó de uma rede IoT, publicando periodicamente os dados coletados em um tópico MQTT. O foco dessa etapa é garantir que a solução proposta seja coerente com o cenário do Futuro do Trabalho, privilegiando simplicidade, baixo custo e potencial de expansão.
 
-## 5. Desenvolvimento do Projeto
+3. **Implementação e validação em ambiente simulado**  
+   A solução foi implementada utilizando um ESP32 e simulada em ambiente virtual. Foram realizados testes para verificar se:
+   - as leituras ambientais eram atualizadas corretamente;
+   - o sistema detectava adequadamente as condições de alerta;
+   - os dados eram enviados ao broker MQTT conforme o esperado.
+   A validação permitiu confirmar a viabilidade da proposta e fornecer base para discussões sobre possíveis extensões.
 
-### 5.1 Lógica de Funcionamento
+7. Resultados Esperados e Relevância
+------------------------------------
 
-1. Na inicialização, o ESP32 configura o sensor DHT22, o LED e estabelece conexão Wi-Fi com a rede do simulador Wokwi.
-2. Em seguida, o ESP32 se conecta ao broker MQTT público.
-3. Um temporizador registra o momento de início do “período de trabalho”.
-4. Em intervalos regulares (por exemplo, a cada 5 segundos), o sistema:
-   - Lê temperatura e umidade do DHT22;
-   - Calcula o tempo de trabalho contínuo desde o início;
-   - Verifica se a temperatura ultrapassa um limiar de conforto (ex.: 28 °C);
-   - Verifica se o tempo de trabalho excede um limite pré-definido (por exemplo, 50 minutos em um cenário real, ou um valor menor em simulação);
-   - Caso alguma condição de desconforto seja detectada, o LED é aceso e o estado é marcado como “alerta”;
-   - Caso contrário, o LED permanece apagado e o estado é “normal”.
-5. Após processar a lógica, o ESP32 monta um **payload JSON** com os dados lidos e o estado de alerta e o publica em um tópico MQTT.
+Embora o projeto não tenha como objetivo substituir sistemas complexos de gestão de saúde ocupacional, ele demonstra, na prática, que **pequenas soluções de IoT podem ter impacto significativo no dia a dia do trabalhador**. Entre os resultados esperados, destacam-se:
 
-### 5.2 Trecho Resumido do Código
+- Sensibilização sobre a importância de monitorar não apenas a produtividade, mas também as condições de trabalho e o bem-estar individual.
+- Ilustração de como tecnologias simples podem ser combinadas para apoiar decisões relacionadas à saúde, por meio de alertas e registros de dados.
+- Estímulo à reflexão sobre como empresas, escolas e instituições podem adotar ferramentas semelhantes para promover ambientes mais saudáveis e inteligentes.
 
-Abaixo, um trecho ilustrativo (resumido) do código utilizado no ESP32:
+Em termos de relevância, o projeto reforça a ideia de que o Futuro do Trabalho envolve, necessariamente, a integração entre **tecnologia, dados e cuidado com as pessoas**. Ao propor uma estação de bem-estar baseada em IoT, o WorkCare IoT contribui para o debate sobre como construir ambientes de trabalho mais humanizados em meio à crescente digitalização das atividades profissionais.
 
-```cpp
-#include <WiFi.h>
-#include <PubSubClient.h>
-#include "DHTesp.h"
+8. Considerações Finais
+-----------------------
 
-const int DHT_PIN = 15;
-const int LED_PIN = 2;
+O projeto WorkCare IoT sintetiza, em uma solução compacta, diversos conceitos trabalhados em disciplinas de tecnologia, como sistemas embarcados, redes, IoT e comunicação de dados, aplicados a um problema concreto e atual: a promoção da saúde e do bem-estar no ambiente de trabalho.
 
-DHTesp dht;
-WiFiClient espClient;
-PubSubClient client(espClient);
+Mais do que entregar um protótipo funcional, a proposta busca evidenciar que o desenvolvimento tecnológico pode – e deve – estar ao serviço da qualidade de vida. Em um cenário em que o Futuro do Trabalho tende a ser cada vez mais digital, automatizado e conectado, iniciativas como esta apontam para um caminho em que **a tecnologia atua como parceira do trabalhador**, ajudando a equilibrar desempenho, saúde e bem-estar.
 
-const char* ssid = "Wokwi-GUEST";
-const char* password = "";
-const char* mqttServer = "broker.hivemq.com";
-const int   mqttPort   = 1883;
-
-unsigned long inicioTrabalho = 0;
-// Exemplo: 50 minutos em milissegundos
-const unsigned long LIMITE_TRABALHO_MS = 50UL * 60UL * 1000UL;
-
-void setup() {
-  Serial.begin(115200);
-  dht.setup(DHT_PIN, DHTesp::DHT22);
-  pinMode(LED_PIN, OUTPUT);
-  // Conexão Wi-Fi e MQTT (funções auxiliares omitidas)
-  inicioTrabalho = millis();
-}
-
-void loop() {
-  // Verificações de conexão Wi-Fi/MQTT (omitidas)
-  unsigned long agora = millis();
-  TempAndHumidity data = dht.getTempAndHumidity();
-
-  float temperatura = data.temperature;
-  float umidade = data.humidity;
-  unsigned long tempoTrabalho = agora - inicioTrabalho;
-
-  bool ambienteRuim   = (temperatura > 28.0);
-  bool tempoExcedido  = (tempoTrabalho > LIMITE_TRABALHO_MS);
-  bool alerta         = ambienteRuim || tempoExcedido;
-
-  digitalWrite(LED_PIN, alerta ? HIGH : LOW);
-
-  // Montagem e publicação do payload MQTT (omitidos neste trecho)
-}
-```
-
-*(No projeto completo, as funções de conexão Wi-Fi, reconexão MQTT e publicação do JSON são implementadas.)*
-
-## 6. Demonstração e Testes
-
-A validação do sistema foi realizada em duas etapas principais:
-
-### 6.1 Teste de Lógica Local (Serial Monitor)
-
-- O projeto foi executado no Wokwi, observando-se, no **Serial Monitor**, os valores de temperatura, umidade e tempo de trabalho.
-- Foram verificados os momentos em que o LED era acionado, tanto por temperatura acima do limite quanto por estouro do tempo de trabalho configurado (em simulação, um tempo menor foi usado para facilitar a visualização).
-
-### 6.2 Teste de Envio MQTT
-
-- Com o ESP32 conectado ao broker `broker.hivemq.com`, o projeto publicou os dados no tópico:
-  - `workcare/estacao1/sensores`
-- Utilizando um cliente MQTT, foi possível se inscrever (`subscribe`) nesse tópico e visualizar as mensagens JSON, confirmando a comunicação IoT.
-
-## 7. Resultados Esperados e Discussão
-
-O projeto conseguiu integrar, de forma simples, conceitos importantes relacionados ao Futuro do Trabalho:
-
-- **Automação e monitoramento contínuo:** o sistema monitora variáveis ambientais sem intervenção humana, reduzindo a dependência da percepção subjetiva do trabalhador.
-- **Feedback em tempo real:** o LED funciona como um alerta imediato, sugerindo pausas ou ajustes no ambiente.
-- **Uso de dados para tomada de decisão:** os dados enviados via MQTT podem ser armazenados e analisados por aplicações externas, permitindo visualizar padrões de conforto/desconforto e carga de trabalho.
-- **Baixo custo e acessibilidade:** a solução utiliza componentes amplamente disponíveis, podendo ser adaptada para home offices, coworkings e pequenas empresas.
-
-Além disso, o projeto reforça a importância de considerar o bem-estar do trabalhador em ambientes cada vez mais digitais e conectados, demonstrando que tecnologias simples podem gerar benefícios práticos no dia a dia.
-
-## 8. Conclusão
-
-A “Estação de Bem-Estar WorkCare IoT” demonstra, de forma didática, como a combinação de **ESP32**, **sensores ambientais**, **atuadores simples** (LED) e **comunicação MQTT** pode ser aplicada para promover saúde e qualidade de vida no ambiente de trabalho, alinhando-se ao tema do Futuro do Trabalho.
-
-Mesmo com uma configuração mínima (um microcontrolador, um sensor e um LED), o sistema é capaz de:
-- Monitorar o ambiente;
-- Auxiliar na gestão de pausas;
-- Enviar dados para a nuvem;
-- Servir de base para soluções mais complexas.
-
-Como trabalhos futuros, podem ser consideradas extensões como:
-- Inclusão de um botão para registrar manualmente o início e o fim de pausas;
-- Integração com um painel web ou dashboard (por exemplo, Node-RED, Grafana);
-- Armazenamento histórico dos dados para análise a longo prazo;
-- Uso de múltiplos sensores (luminosidade, ruído, presença) para enriquecer o monitoramento.
-
-## 9. Como Executar o Projeto
-
-1. Acessar o simulador Wokwi e criar um novo projeto com ESP32.
-2. Adicionar o sensor DHT22 e o LED ao circuito, realizando as conexões conforme descrito na Seção 4.3.
-3. Copiar o código-fonte completo para o arquivo `.ino` do projeto.
-4. Executar o simulador e abrir o Serial Monitor para acompanhar as leituras.
-5. (Opcional) Utilizar um cliente MQTT para se inscrever no tópico configurado e visualizar as mensagens publicadas.
-
----
-
-**Observação:** este README foi elaborado em formato acadêmico, com seções de contextualização, objetivos, fundamentação teórica, materiais e métodos, desenvolvimento, resultados esperados e conclusão, podendo ser adaptado conforme as exigências específicas da disciplina ou instituição.
+Como desdobramentos futuros, a solução pode ser expandida para incluir novos tipos de sensores (como luminosidade e ruído), mecanismos de interação com o usuário (aplicativos, notificações em dispositivos móveis) e integração com plataformas de análise de dados, potencializando ainda mais sua aplicabilidade em contextos reais.
